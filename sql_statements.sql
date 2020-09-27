@@ -1,6 +1,6 @@
 
 -- Create DataBase
-CREATE DATABASE project1;
+CREATE DATABASE IF NOT EXISTS project1;
 
 -- Create Table Account
 CREATE TABLE account(
@@ -22,3 +22,6 @@ CREATE TABLE account(
         FOREIGN KEY(account_id) REFERENCES account(id)
         
         );
+
+    SELECT account.gebruikersnaam, persoon.voornaam, persoon.achternaam FROM account
+    INNER JOIN persoon ON account.id = persoon.account_id

@@ -1,5 +1,7 @@
 <?php
 
+require "autoloader.inc.php";
+
 $user = "root";
 $pass = "";
 

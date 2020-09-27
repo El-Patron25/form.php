@@ -1,10 +1,18 @@
 <?php
 
-$user = "root";
-$pass = "";
+require "includes/autoloader.inc.php";
 
-$pdo = new PDO('mysql:host=localhost;dbname=test', $user, $pass);
+$component = new Components();
+$connect = new dbconnection();
 
+
+
+	$createdb = $connect->createDb("project1");
+	// $connect->query("SELECT * FROM persoon");
+	// $connect->createTable("persoon");
+
+
+// $connect->query("SELECT Table FROM DATABASE");
 ?>
 
 <!DOCTYPE html>
@@ -29,63 +37,23 @@ $pdo = new PDO('mysql:host=localhost;dbname=test', $user, $pass);
 
 </head>
 <body id="background">
-
 	<h1 id="h1">Sign in!</h1>
-
-	<fieldset id="form">
-		<form id="fo" action="index.php" method="POST" &gt>
-			<div class="container">
-				<label>Username/ E-mail:</label>
-				<label class="error"></label>
-				<i class="fas fa-user-tie"></i><input type="text" name="uan" id="uan">
-			</div>
-			<div class="container">
-				<label>Password:</label>
-				<i class="fas fa-unlock-alt"></i><input type="password" name="pass" id="uan">
-			</div>
-			<div class="container">
-				<button name="sub">Submit<i class="fas fa-sign-in-alt"></i></button>
-			</div>
-		</form>
-	</fieldset>
-
-
+		<fieldset id="form">
+			<form id="fo" action="index.php" method="GET" &gt>
+				<?php $component->inputElement("Username/ E-mail:", "<i class='fas fa-user-tie'></i>", "text", "uan", "uan"); ?>
+				<?php $component->inputElement("Password:", "<i class='fas fa-unlock-alt'></i>", "password", "pass", "pass"); ?>
+				<div class="container">
+				<?php $component->buttonElement("btn-login", "sub-login", "<i class='fas fa-sign-in-alt'></i>", "Submit") ?>
+				</div>
+			</form>
+		</fieldset>
 <!-- main.js -->
-	<script type="text/javascript" src="main.js"></script>
+<!-- 	<script type="text/javascript" src="main.js"></script> -->
 
 	<!-- JQEURY AJAX -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </body>
 </html>
-
 <?php
-
-	if(isset($_POST['sub'])){
-
-		$username = $_POST['uan'];
-		$pass = $_POST['pass'];
-		$pattern = "/^[a-zA-Z0-9]*$/";
-
-		$sql = "SELECT DISTINCT username FROM gebruikers WHERE username = '".$username."' ";
-		$stmt = $pdo->prepare($sql);
-		if (!$stmt->execute()) {
-			header("Location: index.php?error=SQLfail");
-			exit();
-		}
-		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		if(empty($result)){
-			echo "Welcome "."<p color='red'>".$username."</p>";
-		}elseif(empty($username) || empty($pass)){
-			header("Location: index.php?error=emptyfields");
-		}elseif(!preg_match($pattern, $username)){
-			header("Location: index.php?error=incorrectusername");
-		}elseif(!$sql) {
-			header("Location: index.php?error=usernamedoesntexist");
-		}else{
-				echo "<h1 font=26px>Welcome '".$username."'</h1>";
-			
-		}
-	}
-
-
+	$connect->loginUser($_GET['sub-login'], $_GET['uan'], $_GET['pass']);
 ?>
